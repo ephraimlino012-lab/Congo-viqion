@@ -1,0 +1,523 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090b10">
+<title>CONGO VISION | Le Congo en perspective</title>
+<style>
+:root{
+ --bg:#090b10;--panel:#141821;--red:#c51d32;
+ --gold:#d8b568;--white:#f5f5f5;--muted:#9ca3af;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--white);
+ font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
+button,input{font:inherit}
+button{cursor:pointer}
+header{
+ position:fixed;top:0;width:100%;z-index:20;
+ display:flex;align-items:center;justify-content:space-between;
+ padding:17px 5%;background:linear-gradient(#090b10,transparent);
+ transition:.3s;
+}
+header.scrolled{background:#090b10;box-shadow:0 3px 15px #0008}
+.logo{font-size:23px;font-weight:900;letter-spacing:1px}
+.logo span{color:var(--red)}
+nav{display:flex;gap:23px;align-items:center}
+nav button{
+ border:0;background:none;color:#ddd;font-size:13px;
+ white-space:nowrap
+}
+nav button:hover,nav button.active{color:var(--gold)}
+.header-actions{display:flex;gap:12px;align-items:center}
+.icon-btn{background:none;border:0;color:white;font-size:20px}
+.admin-btn{background:var(--red);border:0;color:white;
+ padding:10px 14px;border-radius:5px;font-size:12px}
+.hero{
+ min-height:570px;height:78vh;max-height:760px;
+ position:relative;display:flex;align-items:flex-end;
+ padding:120px 6% 65px;
+ background:
+ linear-gradient(90deg,#090b10 0%,#090b10d9 42%,transparent 100%),
+ linear-gradient(0deg,#090b10 0%,transparent 70%),
+ url('https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=1800&q=85')
+ center/cover;
+}
+.hero-content{max-width:610px;position:relative;z-index:2}
+.eyebrow{color:var(--gold);font-size:12px;
+ letter-spacing:3px;font-weight:bold;margin-bottom:18px}
+.hero h1{font-size:clamp(38px,7vw,76px);
+ line-height:.98;margin-bottom:20px;font-weight:900}
+.hero p{font-size:15px;line-height:1.7;
+ color:#d2d4d9;max-width:530px;margin-bottom:25px}
+.buttons{display:flex;gap:12px;flex-wrap:wrap}
+.primary,.secondary{
+ border:0;padding:14px 22px;border-radius:4px;
+ font-weight:bold;font-size:13px
+}
+.primary{background:white;color:#111}
+.secondary{background:#ffffff25;color:white;
+ border:1px solid #ffffff40}
+.primary:hover{background:var(--gold)}
+.secondary:hover{background:#ffffff40}
+main{padding:10px 5% 60px}
+.section{margin:35px 0 43px}
+.section-head{display:flex;justify-content:space-between;
+ align-items:center;margin-bottom:17px;gap:10px}
+.section-head h2{font-size:21px}
+.section-head small{color:var(--gold);font-size:11px}
+.cards{
+ display:flex;gap:15px;overflow-x:auto;
+ padding:5px 2px 18px;scrollbar-width:thin;
+ scrollbar-color:#444 transparent
+}
+.card{
+ min-width:220px;width:220px;flex-shrink:0;
+ background:var(--panel);border-radius:7px;overflow:hidden;
+ cursor:pointer;transition:.25s;position:relative
+}
+.card:hover{transform:scale(1.045);z-index:3;
+ box-shadow:0 10px 30px #0009}
+.poster{height:135px;position:relative;background:#202733}
+.poster img{width:100%;height:100%;object-fit:cover}
+.poster .tag{
+ position:absolute;top:9px;left:9px;background:var(--red);
+ padding:5px 7px;font-size:9px;font-weight:bold;
+ border-radius:2px
+}
+.card-info{padding:12px}
+.card-info h3{font-size:14px;margin-bottom:7px}
+.card-info p{font-size:11px;color:var(--muted);line-height:1.5}
+.card-info .meta{color:var(--gold);font-size:10px;margin-top:8px}
+.news-layout{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.news{
+ background:var(--panel);border-radius:7px;overflow:hidden;
+ cursor:pointer;transition:.2s
+}
+.news:hover{transform:translateY(-4px)}
+.news img{width:100%;height:165px;object-fit:cover}
+.news-body{padding:15px}
+.news-body small{color:var(--gold);font-size:10px}
+.news-body h3{font-size:15px;margin:10px 0;line-height:1.4}
+.news-body p{color:var(--muted);font-size:12px;line-height:1.6}
+.source{font-size:10px;color:#9ca3af;margin-top:12px}
+footer{background:#10141c;padding:35px 5%;
+ color:var(--muted);font-size:12px;line-height:2}
+footer strong{color:white}
+footer .foot-logo{font-size:23px;color:white;font-weight:900}
+.overlay{
+ display:none;position:fixed;inset:0;z-index:50;
+ background:#000d;align-items:center;justify-content:center;
+ padding:15px;overflow-y:auto
+}
+.overlay.show{display:flex}
+.modal{
+ background:#141821;width:100%;max-width:650px;
+ max-height:90vh;overflow-y:auto;padding:25px;
+ border-radius:9px;position:relative
+}
+.close{position:absolute;right:15px;top:12px;
+ background:none;border:0;color:white;font-size:24px}
+.modal h2{font-size:23px;margin:10px 0 15px}
+.modal p{font-size:13px;line-height:1.8;color:#c4c8d0}
+.modal input,.modal textarea,.modal select{
+ display:block;width:100%;padding:12px;margin:10px 0;
+ border:1px solid #343b48;border-radius:4px;
+ background:#0c1018;color:white
+}
+.modal textarea{min-height:90px;resize:vertical}
+.modal label{font-size:12px;color:var(--gold)}
+.modal .primary{margin-top:10px}
+.admin-list{margin-top:20px}
+.admin-item{padding:12px;background:#202633;margin:8px 0;
+ display:flex;justify-content:space-between;gap:10px;font-size:12px}
+.delete{background:#9d1d2d;color:white;border:0;padding:7px}
+.searchbar{
+ display:none;position:fixed;z-index:30;top:65px;
+ left:0;width:100%;padding:15px 5%;background:#111720
+}
+.searchbar.show{display:block}
+.searchbar input{width:100%;padding:13px;background:#252b36;
+ border:0;border-radius:4px;color:white}
+#toast{position:fixed;bottom:20px;left:50%;
+ transform:translateX(-50%);background:#242b37;
+ color:white;padding:12px 20px;border-radius:5px;
+ display:none;z-index:100;font-size:12px}
+.empty{color:var(--muted);font-size:13px;padding:15px}
+@media(max-width:700px){
+ header{padding:14px 4%}
+ .logo{font-size:19px}
+ nav{gap:13px;overflow-x:auto;max-width:53%}
+ nav button{font-size:11px}
+ .admin-btn{padding:8px;font-size:10px}
+ .hero{height:70vh;min-height:490px;padding:100px 5% 45px;
+ background-position:58% center}
+ .hero p{font-size:13px}
+ main{padding:5px 4% 40px}
+ .section-head h2{font-size:18px}
+ .card{min-width:185px;width:185px}
+ .poster{height:120px}
+ .news-layout{grid-template-columns:1fr 1fr;gap:10px}
+ .news img{height:110px}
+ .news-body{padding:10px}
+ .news-body h3{font-size:12px}
+ .news-body p{font-size:11px}
+}
+@media(max-width:390px){
+ nav{max-width:45%;gap:10px}
+ .news-layout{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header id="header">
+ <div class="logo">CONGO<span>VISION</span></div>
+ <nav id="navigation">
+  <button class="active" onclick="showSection('home',this)">Accueil</button>
+  <button onclick="showSection('dossier',this)">Dossier Congo</button>
+  <button onclick="showSection('government',this)">Gouvernement</button>
+  <button onclick="showSection('realisations',this)">Réalisations</button>
+ </nav>
+ <div class="header-actions">
+  <button class="icon-btn" onclick="toggleSearch()">⌕</button>
+  <button class="admin-btn" onclick="openAdmin()">ADMIN</button>
+ </div>
+</header>
+
+<div class="searchbar" id="searchbar">
+ <input id="searchInput" placeholder="Rechercher une actualité, une vidéo..."
+ oninput="searchContent(this.value)">
+</div>
+
+<section class="hero" id="home">
+ <div class="hero-content">
+  <div class="eyebrow">L'INFORMATION EN PROFONDEUR</div>
+  <h1>LE CONGO.<br>SON HISTOIRE.<br>SON AVENIR.</h1>
+  <p>
+   Comprendre les enjeux de la République démocratique du Congo.
+   Actualités, dossiers, témoignages, décisions publiques et
+   réalisations à travers des contenus documentés.
+  </p>
+  <div class="buttons">
+   <button class="primary" onclick="showSection('dossier')">▶ Explorer les dossiers</button>
+   <button class="secondary" onclick="showSection('realisations')">Découvrir les réalisations</button>
+  </div>
+ </div>
+</section>
+
+<main>
+ <section class="section" id="dossier">
+  <div class="section-head">
+   <h2>🔴 Dossier Congo</h2>
+   <small>COMPRENDRE • DOCUMENTer</small>
+  </div>
+  <div class="cards" id="dossierCards"></div>
+ </section>
+
+ <section class="section" id="government">
+  <div class="section-head">
+   <h2>La voix du Gouvernement</h2>
+   <small>COMMUNIQUÉS & DÉCLARATIONS</small>
+  </div>
+  <div class="cards" id="governmentCards"></div>
+ </section>
+
+ <section class="section" id="realisations">
+  <div class="section-head">
+   <h2>Le Congo en construction</h2>
+   <small>PROJETS & RÉALISATIONS</small>
+  </div>
+  <div class="cards" id="realisationsCards"></div>
+ </section>
+
+ <section class="section" id="reportages">
+  <div class="section-head">
+   <h2>Reportages & Documentaires</h2>
+   <small>IMAGES • TÉMOIGNAGES • VIDÉOS</small>
+  </div>
+  <div class="cards" id="reportageCards"></div>
+ </section>
+
+ <section class="section" id="actualites">
+  <div class="section-head">
+   <h2>À la une</h2>
+   <small>ARTICLES & INFORMATIONS</small>
+  </div>
+  <div class="news-layout" id="newsGrid"></div>
+ </section>
+</main>
+
+<footer>
+ <div class="foot-logo">CONGO<span style="color:var(--red)">VISION</span></div>
+ <p>Créer. Informer. Documenter. Construire la mémoire collective.</p>
+ <p>Une plateforme indépendante de documentation et d'information sur la RDC.</p>
+ <p>Les contenus de démonstration ne constituent pas des informations d'actualité vérifiées.</p>
+ <br>
+ <strong>CONGO VISION</strong> © 2026 — Tous droits réservés.
+</footer>
+
+<!-- DÉTAIL D'UNE PUBLICATION -->
+<div class="overlay" id="detailOverlay">
+ <div class="modal">
+  <button class="close" onclick="closeModal('detailOverlay')">×</button>
+  <div id="detailContent"></div>
+ </div>
+</div>
+
+<!-- ADMINISTRATION -->
+<div class="overlay" id="adminOverlay">
+ <div class="modal">
+  <button class="close" onclick="closeModal('adminOverlay')">×</button>
+  <div class="eyebrow">ESPACE ÉDITORIAL</div>
+  <h2>Administration</h2>
+  <p>Ajouter des articles, dossiers, vidéos et annonces à la plateforme.</p>
+  <form id="publishForm">
+   <label>Titre de la publication</label>
+   <input id="title" required placeholder="Titre du contenu">
+   <label>Catégorie</label>
+   <select id="category">
+    <option value="dossier">Dossier Congo</option>
+    <option value="government">Gouvernement</option>
+    <option value="realisations">Réalisations</option>
+    <option value="reportage">Reportage / Documentaire</option>
+    <option value="news">Actualités</option>
+   </select>
+   <label>Image (URL publique)</label>
+   <input id="image" placeholder="https://...">
+   <label>Lien vidéo (YouTube ou autre)</label>
+   <input id="video" placeholder="https://...">
+   <label>Résumé / Description</label>
+   <textarea id="description" required placeholder="Présentez l'information..."></textarea>
+   <label>Source de l'information</label>
+   <input id="source" placeholder="Institution, média, document...">
+   <label>Lien vers la source</label>
+   <input id="sourceUrl" placeholder="https://...">
+   <label>Statut de vérification</label>
+   <select id="verification">
+    <option value="À vérifier">À vérifier</option>
+    <option value="Source officielle">Source officielle</option>
+    <option value="Corroboré">Corroboré par plusieurs sources</option>
+   </select>
+   <button class="primary" type="submit">+ Publier le contenu</button>
+  </form>
+  <div class="admin-list">
+   <h3>Publications ajoutées</h3>
+   <div id="adminList"></div>
+  </div>
+  <p style="margin-top:20px;color:#d8b568">
+   Attention : cette administration est une démonstration locale.
+   Les publications sont enregistrées sur cet appareil uniquement.
+  </p>
+ </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const demoImage="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80";
+
+const defaults=[
+ {id:1,title:"Comprendre la crise dans l'Est de la RDC",category:"dossier",
+ description:"Un dossier pédagogique pour comprendre les origines, les acteurs, les conséquences humanitaires et les enjeux régionaux du conflit. Les sources documentaires doivent être ajoutées avant publication.",
+ image:"https://images.unsplash.com/photo-1489493585363-d69421e0edd3?auto=format&fit=crop&w=800&q=80",
+ source:"Sources à documenter",verification:"À vérifier"},
+ {id:2,title:"La situation humanitaire et les populations déplacées",category:"dossier",
+ description:"Documenter les conséquences de la crise sur les familles, les enfants et les communautés affectées.",
+ image:"https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=800&q=80",
+ source:"Sources humanitaires à documenter",verification:"À vérifier"},
+ {id:3,title:"Chronologie des événements",category:"dossier",
+ description:"Une chronologie éditoriale des événements majeurs, avec dates et références consultables.",
+ image:demoImage,source:"Archives à compléter",verification:"À vérifier"},
+ {id:4,title:"Communiqués et annonces officielles",category:"government",
+ description:"Un espace de publication des communications officielles. Chaque annonce doit être accompagnée de son document original ou de son lien institutionnel.",
+ image:"https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=800&q=80",
+ source:"Portail institutionnel à renseigner",verification:"À vérifier"},
+ {id:5,title:"Discours et interventions présidentiels",category:"government",
+ description:"Retrouver les discours, interventions et annonces du Président de la République avec leur date et leur source originale.",
+ image:"https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80",
+ source:"Source officielle à renseigner",verification:"À vérifier"},
+ {id:6,title:"Infrastructures et développement",category:"realisations",
+ description:"Documenter les projets d'infrastructures : localisation, budget annoncé, calendrier, état d'avancement et preuves visuelles.",
+ image:"https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80",
+ source:"Documents de projet à renseigner",verification:"À vérifier"},
+ {id:7,title:"Éducation et accès aux services publics",category:"realisations",
+ description:"Suivre les politiques publiques et leurs résultats concrets sur le terrain.",
+ image:"https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80",
+ source:"Données à documenter",verification:"À vérifier"},
+ {id:8,title:"Portraits et témoignages du Congo",category:"reportage",
+ description:"Une collection de témoignages et de reportages consacrés aux citoyens et aux réalités congolaises.",
+ image:"https://images.unsplash.com/photo-1489493585363-d69421e0edd3?auto=format&fit=crop&w=800&q=80",
+ source:"Production éditoriale",verification:"À vérifier"}
+];
+
+let publications=[];
+try{
+ publications=JSON.parse(localStorage.getItem("cv_publications"))||defaults;
+}catch(e){publications=defaults;}
+
+function save(){
+ localStorage.setItem("cv_publications",JSON.stringify(publications));
+}
+
+const categories={
+ dossier:"dossierCards",
+ government:"governmentCards",
+ realisations:"realisationsCards",
+ reportage:"reportageCards"
+};
+
+function escapeHTML(str){
+ return String(str||"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
+}
+
+function cardHTML(p){
+ return `<article class="card" onclick="openDetail(${p.id})">
+ <div class="poster">
+ <img src="${escapeHTML(p.image||demoImage)}" alt=""
+ onerror="this.src='${demoImage}'">
+ <span class="tag">${escapeHTML(p.verification||"À vérifier")}</span>
+ </div>
+ <div class="card-info">
+ <h3>${escapeHTML(p.title)}</h3>
+ <p>${escapeHTML(p.description).slice(0,95)}...</p>
+ <div class="meta">CONGO VISION • DOCUMENTATION</div>
+ </div></article>`;
+}
+
+function render(){
+ Object.values(categories).forEach(id=>{
+  document.getElementById(id).innerHTML="";
+ });
+ document.getElementById("newsGrid").innerHTML="";
+
+ publications.forEach(p=>{
+  if(categories[p.category]){
+   document.getElementById(categories[p.category]).innerHTML+=cardHTML(p);
+  }
+  if(p.category==="news"){
+   document.getElementById("newsGrid").innerHTML+=`
+   <article class="news" onclick="openDetail(${p.id})">
+   <img src="${escapeHTML(p.image||demoImage)}" onerror="this.src='${demoImage}'">
+   <div class="news-body">
+   <small>${escapeHTML(p.verification)}</small>
+   <h3>${escapeHTML(p.title)}</h3>
+   <p>${escapeHTML(p.description).slice(0,120)}...</p>
+   <div class="source">Source : ${escapeHTML(p.source||"À renseigner")}</div>
+   </div></article>`;
+  }
+ });
+ ["dossierCards","governmentCards","realisationsCards","reportageCards","newsGrid"].forEach(id=>{
+  if(!document.getElementById(id).innerHTML.trim()){
+   document.getElementById(id).innerHTML='<div class="empty">Aucun contenu publié dans cette rubrique.</div>';
+  }
+ });
+}
+
+function openDetail(id){
+ const p=publications.find(x=>x.id===id);
+ if(!p)return;
+ const video=p.video?`
+ <div style="margin:15px 0">
+ <a href="${escapeHTML(p.video)}" target="_blank" rel="noopener" style="color:#d8b568">
+ ▶ Voir la vidéo
+ </a></div>`:"";
+ const source=p.sourceUrl?`
+ <p style="margin-top:12px"><a href="${escapeHTML(p.sourceUrl)}" target="_blank" rel="noopener" style="color:#d8b568">Consulter la source originale ↗</a></p>`:"";
+ document.getElementById("detailContent").innerHTML=`
+ <div class="eyebrow">CONGO VISION • ${escapeHTML(p.verification)}</div>
+ <img src="${escapeHTML(p.image||demoImage)}" style="width:100%;max-height:260px;object-fit:cover;border-radius:5px">
+ <h2>${escapeHTML(p.title)}</h2>
+ <p>${escapeHTML(p.description)}</p>
+ ${video}
+ <p style="margin-top:15px;color:#d8b568">Source : ${escapeHTML(p.source||"Non renseignée")}</p>
+ ${source}
+ <p style="margin-top:20px;font-size:11px;color:#9ca3af">Vérifiez toujours les documents originaux. Une déclaration officielle atteste de la position de son auteur, pas nécessairement de la véracité indépendante de chaque affirmation.</p>`;
+ document.getElementById("detailOverlay").classList.add("show");
+}
+
+function closeModal(id){
+ document.getElementById(id).classList.remove("show");
+}
+function openAdmin(){
+ document.getElementById("adminOverlay").classList.add("show");
+ renderAdmin();
+}
+function renderAdmin(){
+ document.getElementById("adminList").innerHTML=publications.map(p=>`
+ <div class="admin-item">
+ <span>${escapeHTML(p.title)}</span>
+ <button class="delete" onclick="removePublication(${p.id})">Supprimer</button>
+ </div>`).join("")||"Aucune publication.";
+}
+function removePublication(id){
+ publications=publications.filter(p=>p.id!==id);
+ save();render();renderAdmin();toast("Publication supprimée.");
+}
+
+document.getElementById("publishForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ const category=document.getElementById("category").value;
+ const p={
+ id:Date.now(),
+ title:document.getElementById("title").value.trim(),
+ category,
+ image:document.getElementById("image").value.trim()||demoImage,
+ video:document.getElementById("video").value.trim(),
+ description:document.getElementById("description").value.trim(),
+ source:document.getElementById("source").value.trim(),
+ sourceUrl:document.getElementById("sourceUrl").value.trim(),
+ verification:document.getElementById("verification").value
+ };
+ publications.unshift(p);
+ save();render();renderAdmin();this.reset();
+ toast("Publication enregistrée sur cet appareil.");
+});
+
+function showSection(id,button){
+ const el=document.getElementById(id);
+ if(el)el.scrollIntoView({behavior:"smooth"});
+ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+ if(button)button.classList.add("active");
+}
+function toggleSearch(){
+ document.getElementById("searchbar").classList.toggle("show");
+ document.getElementById("searchInput").focus();
+}
+function searchContent(value){
+ const q=value.toLowerCase().trim();
+ if(!q){render();return;}
+ Object.values(categories).forEach(id=>{
+  document.getElementById(id).innerHTML="";
+ });
+ document.getElementById("newsGrid").innerHTML="";
+ const results=publications.filter(p=>
+  (p.title+" "+p.description+" "+p.source).toLowerCase().includes(q)
+ );
+ results.forEach(p=>{
+  if(categories[p.category]){
+   document.getElementById(categories[p.category]).innerHTML+=cardHTML(p);
+  }else{
+   document.getElementById("newsGrid").innerHTML+=`
+   <article class="news" onclick="openDetail(${p.id})">
+   <div class="news-body"><h3>${escapeHTML(p.title)}</h3>
+   <p>${escapeHTML(p.description)}</p></div></article>`;
+  }
+ });
+}
+function toast(message){
+ const t=document.getElementById("toast");
+ t.textContent=message;t.style.display="block";
+ setTimeout(()=>t.style.display="none",2500);
+}
+window.addEventListener("scroll",()=>{
+ document.getElementById("header").classList.toggle("scrolled",scrollY>40);
+});
+render();
+</script>
+</body>
+</html>
