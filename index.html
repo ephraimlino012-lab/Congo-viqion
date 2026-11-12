@@ -313,8 +313,40 @@ footer .foot-logo{font-size:23px;color:white;font-weight:900}
   </p>
  </div>
 </div>
+<div class="overlay" id="resetOverlay">
+ <div class="modal">
+  <div class="eyebrow">SÉCURITÉ DU COMPTE</div>
+  <h2>Nouveau mot de passe</h2>
+  <p>Choisissez un nouveau mot de passe pour votre compte CONGO VISION.</p>
 
+  <form id="resetForm">
+   <label>Nouveau mot de passe</label>
+   <input type="password" id="newPassword"
+    minlength="8" required autocomplete="new-password"
+    placeholder="Minimum 8 caractères">
+
+   <label>Confirmer le mot de passe</label>
+   <input type="password" id="confirmPassword"
+    minlength="8" required autocomplete="new-password"
+    placeholder="Répétez le mot de passe">
+
+   <p id="resetMessage" style="color:#d8b568"></p>
+
+   <button class="primary" type="submit">
+    Enregistrer le nouveau mot de passe
+   </button>
+  </form>
+ </div>
+</div>
 <div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const supabaseClient = window.supabase.createClient(
+ "https://gybmiargmaynfdmkhrxy.supabase.co",
+ "sb_publishable_j056LngV_AXJqvgLjATI8A_V9NESIlN"
+);
 
 <script>
 const demoImage="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80";
@@ -518,6 +550,44 @@ window.addEventListener("scroll",()=>{
  document.getElementById("header").classList.toggle("scrolled",scrollY>40);
 });
 render();
+// Détection du lien de récupération Supabase
+supabaseClient.auth.onAuthStateChange((event, session) => {
+ if(event === "PASSWORD_RECOVERY" && session){
+  document.getElementById("resetOverlay").classList.add("show");
+ }
+});
+
+// Enregistrement du nouveau mot de passe
+document.getElementById("resetForm").addEventListener("submit", async function(e){
+ e.preventDefault();
+
+ const password = document.getElementById("newPassword").value;
+ const confirmation = document.getElementById("confirmPassword").value;
+ const message = document.getElementById("resetMessage");
+
+ if(password !== confirmation){
+  message.textContent = "Les deux mots de passe ne correspondent pas.";
+  return;
+ }
+
+ message.textContent = "Enregistrement en cours...";
+
+ const { error } = await supabaseClient.auth.updateUser({
+  password: password
+ });
+
+ if(error){
+  message.textContent = "Erreur : " + error.message;
+  return;
+ }
+
+ message.textContent = "Mot de passe modifié avec succès !";
+ this.reset();
+
+ setTimeout(() => {
+  document.getElementById("resetOverlay").classList.remove("show");
+ }, 2000);
+});
 </script>
 </body>
 </html>
